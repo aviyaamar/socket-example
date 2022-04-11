@@ -8,28 +8,40 @@ const socket = io.connect('http://localhost:3001')
 function App() {
  const [username, setUsername]= useState('')
  const [room, setRoom] = useState("")
+ const [showChat, setShowChat]= useState(false)
 
  const joinRoom = ()=>{
     if(username !== "" && room !== ""){
       socket.emit('Join__Room', room)
+      setShowChat(true)
 
     }
  }
   return (
     <div className="App">
-      <h4>JOIN CAHT</h4>
+      {!showChat ?  (
+        <div className="joinChatContainer">   
+         <h4>JOIN CAHT</h4>
       <input type='text'
        placeholder='John...' 
        onChange={(event)=>{
-       setUsername(event.target.value)}}
+       setUsername(event.target.value)
+      }}
          />
-      <input type='text'
+
+       <input 
+       type='text'
        placeholder='Room ID...' 
        onChange={(event)=>{
-        setRoom(event.target.value)}} />
-      <button onClick={joinRoom}>Join A CAHT</button>
-
-      <Chat socket={socket} username={username} room={room}/>
+        setRoom(event.target.value)
+        }}
+         />
+          <button onClick={joinRoom}>Join A CAHT</button>
+        </div>
+      ) : (
+        <Chat socket={socket} username={username} room={room}/>
+      )}
+      
     </div>
   );
 }
